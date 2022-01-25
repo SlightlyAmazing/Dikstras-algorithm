@@ -349,7 +349,8 @@ class removeTool(placeTool):
         gridManager.Current.grid[pos].reset()
         
 ##########################
-if __name__ == '__main__':
+
+def start():    
     gameManager(
         60,
         {"Main": pyg.Surface(Xy(600,600)),"Grid":pyg.Surface(Xy(600,550)),"Menu":pyg.Surface(Xy(600,50))}
@@ -364,4 +365,7 @@ if __name__ == '__main__':
         )
     sleep(0.4)
     gameManager.Current.changeScene("Main")
+    
+if __name__ == '__main__':
+    start()
     
