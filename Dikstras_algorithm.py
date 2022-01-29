@@ -127,7 +127,8 @@ class gridManager(base_classes.baseManager):
                 elif self.grid[key].type == "Path":
                     self.grid[key].type == None
                     self.grid[key].reset()
-                    self.placed.pop(self.placed.index("Path"))
+                    if "Path" in self.placed:
+                        self.placed.pop(self.placed.index("Path"))
                 self.grid[key].shortestPath = 9999
                 self.grid[key].shortestPathRoute = []
             self.distances = {self.start:0}
@@ -194,7 +195,7 @@ class gridManager(base_classes.baseManager):
                 if self.end in self.distances.keys():
                     if self.distances[self.position] >= self.distances[self.end]:
                         gridSceneManager.Current.displayError(2,"shortest distance: "+str(self.distances[self.end]))
-                        print(self.grid[self.end].shortestPathRoute)
+                        #print(self.grid[self.end].shortestPathRoute)
                         for xy in self.grid[self.end].shortestPathRoute:
                             if self.grid[xy].type in ["Wall","Start","End"]:
                                 continue
@@ -235,6 +236,8 @@ class gridSquare(base_classes.baseObject):
 
     def reset(self):
         self.surface = self.originalSurface.copy()
+        if self.type != None and self.type in gridManager.Current.placed:
+            gridManager.Current.placed.pop(gridManager.Current.placed.index(self.type))
         self.type = None
 
     def onUpdate(self):
@@ -255,6 +258,9 @@ class toolManager(base_classes.baseManager):
             self.tools[str(tool.__name__)].exitOnlySelf()
             self.tools.pop(str(tool.__name__))
         else:
+            for key in list(self.tools.keys()):
+                self.tools[key].exitOnlySelf()
+                self.tools.pop(key)
             newTool = tool()
             self.tools.update({type(newTool).__name__:newTool})
 
@@ -345,7 +351,6 @@ class removeTool(placeTool):
     def place(self):
         gridManager.Current.placed.append(None)
         pos = (Xy(pyg.mouse.get_pos())-pygameManager.Current.offset-Xy(0,50))//50
-        gridManager.Current.placed.pop(gridManager.Current.placed.index(gridManager.Current.grid[pos].type))
         gridManager.Current.grid[pos].reset()
         
 ##########################
