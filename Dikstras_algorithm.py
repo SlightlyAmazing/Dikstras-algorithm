@@ -1,4 +1,4 @@
-from common_libs import *    
+from common_libs import *
 import pygame as pyg
 from time import sleep
 from threading import Timer
